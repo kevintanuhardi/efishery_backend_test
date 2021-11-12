@@ -1,0 +1,14 @@
+vendor
+.env
+.git
+.idea
+static/*
+reports/*
+temp
+#ignore proto file
+proto/**/*.pb.go
+bin
+coverage.html
+gl-code-quality-report.json
+cover.out
+.scannerwork
