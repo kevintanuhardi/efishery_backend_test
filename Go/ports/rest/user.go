@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/golang-jwt/jwt"
 	"github.com/kevintanuhardi/efishery_backend_test/domain/user/entity"
 	"github.com/kevintanuhardi/efishery_backend_test/domain/user/usecase"
 	"github.com/kevintanuhardi/efishery_backend_test/pkg/render"
@@ -17,16 +18,23 @@ type User struct {
 }
 
 func (u *User) Register(ctx context.Context, r chi.Router) {
-	r.Route("/user", func(r chi.Router) {
+	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register", u.registerUser)
 		r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 			u.login(w , r.WithContext(ctx))
 		})
+		r.With(ExternalAccess(false)).Get("/token/introspect", u.tokenIntrospect)
 	})
 }
 
 type registerUserResponse struct {
 	Password	string			`json:"password"`
+}
+
+type tokenIntrospectResponse struct {
+	Name string `json:"name"`
+	Phone string `json:"phone"`
+	Role string `json:"role"`
 }
 
 func (u *User) registerUser(w http.ResponseWriter, r *http.Request) {
@@ -76,11 +84,23 @@ func (u *User) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	_, err := u.Usecase.Login(ctx, request);
+	token, err := u.Usecase.Login(ctx, request);
 	if err != nil {
 		render.Response(w, http.StatusUnauthorized, render.EmptyResponse, err.Error(), render.EmptyResponse)
 		return
 	}
 
-	render.Response(w, http.StatusOK, render.EmptyResponse, render.EmptyResponse, render.EmptyResponse)
+	render.Response(w, http.StatusOK, token, render.EmptyResponse, render.EmptyResponse)
+}
+
+func (u *User) tokenIntrospect(w http.ResponseWriter, r *http.Request) {
+
+	privateClaim := r.Context().Value("privateClaim").(jwt.MapClaims)
+
+	claim := tokenIntrospectResponse{
+		Name: privateClaim["name"].(string),
+		Phone: privateClaim["phone"].(string),
+		Role: privateClaim["role"].(string),
+	}
+	render.Response(w, http.StatusOK, claim , render.EmptyResponse, render.EmptyResponse)
 }

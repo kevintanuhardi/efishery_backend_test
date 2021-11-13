@@ -1,5 +1,6 @@
 {
 	"ports": {
 		"http": 3001
-	}
+	},
+	"jwt_secret": "my_secret"
 }
