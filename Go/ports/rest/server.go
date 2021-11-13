@@ -1,18 +1,18 @@
 package rest
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/kevintanuhardi/efishery_backend_test/config"
+	"gorm.io/gorm"
 )
 
 type Server struct {
 	cfg    *config.Config
 	router *chi.Mux
-	db     *sql.DB
+	db     *gorm.DB
 }
 
 func (s *Server) Run() error {

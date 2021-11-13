@@ -1,28 +1,21 @@
 package rest
 
 import (
-	"database/sql"
-	"fmt"
-
 	"github.com/go-chi/chi/v5"
 	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-func createTable(db *sql.DB) error {
+func createTable(db *gorm.DB) error {
 	createTableSQL := `CREATE TABLE IF NOT EXISTS user (
 		"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,		
 		"phone" TEXT,
 		"name" TEXT,
-		"rule" TEXT,
+		"role" TEXT,
 		"password" TEXT(4)
 	  );`
-
-	statement, err := db.Prepare(createTableSQL) // Prepare SQL Statement
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	statement.Exec() // Execute SQL Statements
+	db.Exec(createTableSQL) // Execute SQL Statements
 	return nil
 }
 
@@ -37,12 +30,12 @@ func Application(cfg *Config) error {
 	return server.Run()
 }
 
-func AppWithGorm(cfg *Config) (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "./sqlite-database.db") // Open the created SQLite File
+func AppWithGorm(cfg *Config) (*gorm.DB, error) {
+	db, err := gorm.Open(sqlite.Open("../efishery-database.db"), &gorm.Config{})
+	// db, err := sql.Open("sqlite3", "./sqlite-database.db") // Open the created SQLite File
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close() // Defer Closing the database
 	err = createTable(db) // Create Database Tables
 	return db, err
 }

@@ -7,5 +7,6 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.9 // indirect
 	github.com/rs/cors v1.8.0 // indirect
 	github.com/spf13/cobra v1.2.1 // indirect
+	gorm.io/driver/sqlite v1.2.4 // indirect
 	gorm.io/gorm v1.22.2 // indirect
 )
