@@ -25,5 +25,6 @@ func (s *Server) Run() error {
 	// Use Routes
 	s.routes()
 
+	fmt.Println("Starting server at", s.cfg.Port.HTTP)
 	return http.ListenAndServe(fmt.Sprintf(":%d", s.cfg.Port.HTTP), s.router)
 }

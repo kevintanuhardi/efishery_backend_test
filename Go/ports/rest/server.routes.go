@@ -12,8 +12,8 @@ import (
 func (s *Server) routes() {
 	r := s.router
 
-	ctx := context.Background()
-
+	ctx := context.WithValue(context.Background(), "JWT_SECRET", "my_secret")
+	
 	r.Get("/ping", func (w http.ResponseWriter, r *http.Request) {
 		render.Response(w, http.StatusOK, "pong", render.EmptyResponse, render.EmptyResponse)
 	})

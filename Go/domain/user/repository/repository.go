@@ -8,4 +8,5 @@ import (
 
 type Repository interface {
 	CreateUser(ctx context.Context, user entity.User) (*entity.User, error)
+	FindUserByPhone(ctx context.Context, phone string) (*entity.User, error)
 }

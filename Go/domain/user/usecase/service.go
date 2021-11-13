@@ -12,7 +12,7 @@ type Service struct {
 }
 type ServiceManager interface {
 	createUser(ctx context.Context, user *entity.User) (*entity.User, error)
-
+	Login(ctx context.Context, id int) (*entity.User, error)
 }
 
 func NewService(users repository.Repository) *Service {

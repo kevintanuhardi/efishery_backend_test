@@ -15,3 +15,11 @@ func (r *repo) CreateUser(ctx context.Context, user entity.User) (*entity.User, 
 
 	return &user, nil
 }
+
+func (r *repo) FindUserByPhone(ctx context.Context, phone string) (*entity.User, error) {
+	user := &entity.User{}
+
+	r.db.Where("phone = ?", phone).First(user)
+	return user, nil
+}
+
