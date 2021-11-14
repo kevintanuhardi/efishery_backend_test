@@ -1,23 +1,32 @@
 /* global Helpers */
-const efisherySrv = require('../services/eFishery');
-const currConvSrv = require('../services/currconv');
+const priceSrv = require('../services/price');
 
 module.exports = {
-  getPrice: async (req, res) => {
+  getPrice: async (_, res) => {
     try {
-      let priceList = await efisherySrv.fetchPriceList();
-
-      const currentUsdToIdr = await currConvSrv.fetchConvertCur('IDR', 'USD');
-
-      priceList = priceList.map((priceDatum) => ({
-        ...priceDatum,
-        priceInUSD: priceDatum.price * currentUsdToIdr,
-      }));
+      const priceList = await priceSrv.getPrice();
 
       return Helpers.successResponse(
         res,
         200,
         { data: priceList },
+      );
+    } catch (err) {
+      return Helpers.errorResponse(res, null, err);
+    }
+  },
+  getPriceAggregate: async (req, res) => {
+    try {
+      const {
+        groupBy,
+      } = req.query;
+
+      const priceListAgg = await priceSrv.getPriceAggregate(groupBy);
+
+      return Helpers.successResponse(
+        res,
+        200,
+        { data: priceListAgg },
       );
     } catch (err) {
       return Helpers.errorResponse(res, null, err);

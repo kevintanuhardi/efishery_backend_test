@@ -2,32 +2,26 @@ const jwt = require('jsonwebtoken');
 
 const config = require('../../config');
 
-const oauthClient = config.get('OAUTH');
-
-const generateAccessToken = async ({ phoneNumber, userId }) => jwt.sign({
-  phoneNumber,
-  userId,
-},
-oauthClient.clientSecret,
-{ expiresIn: '365d', algorithm: 'HS256' });
+const jwtSecret = config.get('jwt_secret');
 
 const getDataFromToken = async (bearerToken) => jwt.verify(
-  bearerToken, oauthClient.clientSecret, (err, decoded) => {
+  bearerToken, jwtSecret, (err, decoded) => {
     if (err) {
       throw (err);
     }
-    if (decoded && decoded.exp >= new Date().valueOf() / 1000) {
-      return {
-        active: true,
-        phoneNumber: decoded.phoneNumber,
-        userId: decoded.userId,
-      };
-    }
-    throw ({
-      message: 'Token unauthorized',
-      status: 401,
-    });
+    // if (decoded && decoded.exp >= new Date().valueOf() / 1000) {
+    return {
+      active: true,
+      phoneNumber: decoded.phone,
+      name: decoded.name,
+      role: decoded.role,
+    };
+    // }
+    // throw ({
+    //   message: 'Token unauthorized',
+    //   status: 401,
+    // });
   },
 );
 
-module.exports = { generateAccessToken, getDataFromToken };
+module.exports = { getDataFromToken };

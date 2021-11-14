@@ -1,16 +1,21 @@
 const jwtService = require('../services/jwtService');
 
-const { privateRoute } = require('../helpers/constant');
-
 module.exports = {
-  validateToken: async (req, _, next) => {
+  validateToken: ({adminOnly = false}) => async (req, _, next) => {
     const {
       headers,
-      method,
-      path,
     } = req;
     try {
-      // TODO: ADD validation to backend golang
+      const header = headers.Authorization || headers.authorization;
+      if (!header) throw ({ status: 401, message: 'authorization is not exist' });
+
+      const bearer = header.split(' ');
+
+      const response = await jwtService.getDataFromToken(bearer[1]);
+      if (adminOnly && response.role !== 'admin') {
+        throw ({ status: 401, message: 'This endpoint is for admin only' });
+      }
+      // req.userId = userId;
       return next();
     } catch (err) {
       return next(err);

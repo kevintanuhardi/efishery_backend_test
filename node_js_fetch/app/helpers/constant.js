@@ -9,4 +9,5 @@ module.exports = {
   },
   messages: {
   },
+  provinceField: 'area_provinsi',
 };
