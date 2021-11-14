@@ -13,3 +13,13 @@ gl-code-quality-report.json
 cover.out
 .scannerwork
 config.json
+
+node_modules/
+version.json
+version-staging.json
+version-dev.json
+package-lock.json
+config.json
+trial/
+.serverless/
+.DS_Store
