@@ -1,7 +1,7 @@
 const jwtService = require('../services/jwtService');
 
 module.exports = {
-  validateToken: ({adminOnly = false}) => async (req, _, next) => {
+  validateToken: ({ adminOnly = false }) => async (req, _, next) => {
     const {
       headers,
     } = req;
@@ -15,7 +15,7 @@ module.exports = {
       if (adminOnly && response.role !== 'admin') {
         throw ({ status: 401, message: 'This endpoint is for admin only' });
       }
-      // req.userId = userId;
+      req.privateClaims = response;
       return next();
     } catch (err) {
       return next(err);
