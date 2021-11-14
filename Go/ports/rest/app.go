@@ -31,7 +31,7 @@ func Application(cfg *Config) error {
 }
 
 func AppWithGorm(cfg *Config) (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open("../efishery-database.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("./efishery-database.db"), &gorm.Config{})
 	// db, err := sql.Open("sqlite3", "./sqlite-database.db") // Open the created SQLite File
 	if err != nil {
 		return nil, err
